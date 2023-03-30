@@ -3,10 +3,10 @@ import type { ChangeEvent, HTMLAttributes } from 'react';
 import { EditorState, useEditorState } from '../editor';
 
 export const BtnStyles = createDropdown('Styles', [
-  ['Normal', 'formatBlock', 'DIV'],
-  ['𝗛𝗲𝗮𝗱𝗲𝗿 𝟭', 'formatBlock', 'H1'],
-  ['Header 2', 'formatBlock', 'H2'],
-  ['𝙲𝚘𝚍𝚎', 'formatBlock', 'PRE'],
+  ['12', 'formatBlock', 'DIV', 'font-size:12px;'],
+  ['14', 'formatBlock', 'DIV', 'font-size:14px;'],
+  ['16', 'formatBlock', 'DIV', 'font-size:16px;'],
+  ['18', 'formatBlock', 'DIV', 'font-size:18px;'],
 ]);
 
 export function createDropdown(
@@ -30,7 +30,7 @@ export function createDropdown(
 
     function onChange(e: ChangeEvent<HTMLSelectElement>) {
       const selected = parseInt(e.target.value, 10);
-      const [, command, commandArgument] = items[selected];
+      const [, command, commandArgument, style] = items[selected];
 
       e.preventDefault();
       e.target.selectedIndex = 0;
@@ -39,6 +39,8 @@ export function createDropdown(
         command(editorState);
       } else {
         document.execCommand(command, false, commandArgument);
+        const listId = window.getSelection().focusNode.parentNode;
+        listId.style=style;
       }
     }
   }
@@ -61,6 +63,7 @@ export type DropDownItem = [
   string,
   string | ((editorState: EditorState) => void),
   string,
+  string
 ];
 
 export interface DropdownProps extends HTMLAttributes<HTMLSelectElement> {
